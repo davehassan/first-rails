@@ -10,6 +10,6 @@ class Enrollment < ActiveRecord::Base
     foreign_key: :student_id,
     primary_key: :id
 
-
+  
 
 end
