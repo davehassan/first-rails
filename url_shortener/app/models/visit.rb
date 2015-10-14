@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: visits
+#
+#  id                                                                    :integer          not null, primary key
+#  visitor_id                                                            :integer
+#  created_at                                                            :datetime
+#  updated_at                                                            :datetime
+#  shortened_url_id                                                      :integer
+#  #<ActiveRecord::ConnectionAdapters::TableDefinition:0x007fb7ab5dea48> :integer
+#
+
 class Visit < ActiveRecord::Base
   validates :visitor_id, :shortened_url_id, :presence => true
 

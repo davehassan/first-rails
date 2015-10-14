@@ -32,6 +32,19 @@ class ShortenedUrl < ActiveRecord::Base
      long_url: long_url, submitter_id: user.id )
   end
 
+  def num_clicks
+    self.visitors.count
+  end
+
+  def num_uniques
+    self.visitors.count
+  end
+
+  def num_recent_uniques
+    self.visitors.where("visits.updated_at > ? ",
+      10.minutes.ago).count
+  end
+
   belongs_to :submitter,
     class_name: "User",
     foreign_key: :submitter_id,
@@ -43,6 +56,7 @@ class ShortenedUrl < ActiveRecord::Base
     primary_key: :id
 
   has_many :visitors,
+    Proc.new {distinct},
     through: :visits,
     source: :visitor
 end

@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
     primary_key: :id
 
   has_many :visited_urls,
+    Proc.new { distict },
     through: :visits,
     source: :url
 end
