@@ -9,7 +9,7 @@
 #
 
 class User < ActiveRecord::Base
-  validates :email, :presence => true, :uniqueness => true
+  validates :email, :limit => 255, :presence => true, :uniqueness => true
 
   has_many :submitted_urls,
     class_name: "ShortenedUrl",

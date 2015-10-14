@@ -13,8 +13,9 @@
 require 'securerandom'
 
 class ShortenedUrl < ActiveRecord::Base
-  validates :submitter_id, :presence => true
-  validates :short_url, :presence => true, :uniqueness => true
+  validates :submitter_id, :short_url, :presence => true
+  validates :short_url, :limit => 255, :uniqueness => true
+  validates :long_url, :limit => 255
 
   def self.random_code
     url_code = SecureRandom::urlsafe_base64
