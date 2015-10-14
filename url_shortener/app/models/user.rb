@@ -11,6 +11,11 @@
 class User < ActiveRecord::Base
   validates :email, :presence => true, :uniqueness => true
 
+  def too_many_submissions?
+    self.submitted_urls.where(
+    "shortened_urls.created_at > ? ", 10.minutes.ago).count > 5
+  end
+
   has_many :submitted_urls,
     class_name: "ShortenedUrl",
     foreign_key: :submitter_id,
@@ -28,6 +33,6 @@ class User < ActiveRecord::Base
 
   has_many :taggings,
     class_name: "Tagging",
-    foreign_key: :tagging_user_id
+    foreign_key: :tagging_user_id,
     primary_key: :id
 end

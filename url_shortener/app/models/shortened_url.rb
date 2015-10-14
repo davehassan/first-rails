@@ -14,9 +14,10 @@ require 'securerandom'
 require 'launchy'
 
 class ShortenedUrl < ActiveRecord::Base
-  validates :submitter_id, :short_url, :presence => true
-  validates :short_url, :uniqueness => true
+  validates :submitter_id, :presence => true
+  validates :short_url, presence: true, :uniqueness => true
   validates :long_url, length: { maximum: 255}
+  validate :too_many_submissions?
 
   def self.random_code
     url_code = SecureRandom::urlsafe_base64
@@ -32,6 +33,12 @@ class ShortenedUrl < ActiveRecord::Base
 
     ShortenedUrl.create!(short_url: short_url,
      long_url: long_url, submitter_id: user.id )
+  end
+
+  def too_many_submissions?
+    if User.find_by_id(self.submitter_id).too_many_submissions?
+      errors.add(:submitter_id, "Too many! What's wrong with you?")
+    end
   end
 
   def num_clicks
