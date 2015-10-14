@@ -9,7 +9,7 @@
 #
 
 class User < ActiveRecord::Base
-  validates :email, :limit => 255, :presence => true, :uniqueness => true
+  validates :email, :presence => true, :uniqueness => true
 
   has_many :submitted_urls,
     class_name: "ShortenedUrl",
@@ -25,4 +25,9 @@ class User < ActiveRecord::Base
     Proc.new { distict },
     through: :visits,
     source: :url
+
+  has_many :taggings,
+    class_name: "Tagging",
+    foreign_key: :tagging_user_id
+    primary_key: :id
 end

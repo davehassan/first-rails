@@ -11,11 +11,12 @@
 #
 
 require 'securerandom'
+require 'launchy'
 
 class ShortenedUrl < ActiveRecord::Base
   validates :submitter_id, :short_url, :presence => true
-  validates :short_url, :limit => 255, :uniqueness => true
-  validates :long_url, :limit => 255
+  validates :short_url, :uniqueness => true
+  validates :long_url, length: { maximum: 255}
 
   def self.random_code
     url_code = SecureRandom::urlsafe_base64
@@ -46,6 +47,10 @@ class ShortenedUrl < ActiveRecord::Base
       10.minutes.ago).count
   end
 
+  def launch
+    Launchy.open(self.long_url)
+  end
+
   belongs_to :submitter,
     class_name: "User",
     foreign_key: :submitter_id,
@@ -60,4 +65,15 @@ class ShortenedUrl < ActiveRecord::Base
     Proc.new {distinct},
     through: :visits,
     source: :visitor
+
+  has_many :taggings,
+    class_name: "Tagging",
+    foreign_key: :short_url_id,
+    primary_key: :id
+
+  has_many :tags,
+    through: :taggings,
+    source: :topic
+
+
 end

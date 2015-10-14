@@ -23,5 +23,5 @@ else
   shorty = ShortenedUrl.find_by_short_url(short_url)
   long_url = shorty.long_url
   Visit.record_visit!(curr_user, shorty)
-  Launchy.open(long_url)
+  shorty.launch 
 end
